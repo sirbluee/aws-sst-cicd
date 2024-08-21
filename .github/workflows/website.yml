@@ -28,9 +28,9 @@ jobs:
       - name: Check test coverage
         id: coverage
         run: |
-          COVERAGE=$(grep -Po 'All files.*? \K\d+(?=%)' ./coverage/lcov-report/index.html)
+          COVERAGE=$(grep -Po '(?<=All files\s+.*? \K\d+)(?=%)' ./coverage/lcov-report/index.html)
           echo "Test coverage: $COVERAGE%"
-          if [ "$COVERAGE" -lt 50 ]; then
+          if [ -z "$COVERAGE" ] || [ "$COVERAGE" -lt 50 ]; then
             echo "Test coverage is below 50%. Failing the build."
             exit 1
           fi
