@@ -1,20 +1,23 @@
 name: CI/CD
 
-# Work on main branch
+# work on main branch
 on:
   push:
     branches: [main]
   pull_request:
     branches: [main]
 
+# set os work on
 jobs:
   build:
     runs-on: ubuntu-latest
 
+    # check code from repo to os
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
 
+      # check node version and install dependencies
       - name: Set up Node.js
         uses: actions/setup-node@v4
         with:
@@ -22,32 +25,14 @@ jobs:
 
       - name: Install dependencies
         run: npm install
-
-  test:
+        
+  # 
+  deploy:
     runs-on: ubuntu-latest
     needs: build
 
     steps:
-      - name: Checkout repository
-        uses: actions/checkout@v4
-
-      - name: Set up Node.js
-        uses: actions/setup-node@v4
-        with:
-          node-version: "20"
-
-      - name: Install dependencies
-        run: npm install
-
-      - name: Run tests
-        run: npm test
-
-  deploy:
-    runs-on: ubuntu-latest
-    needs: test
-
-    steps:
-      - name: Checkout repository
+      - name: Checkout
         uses: actions/checkout@v4
 
       - name: Install dependencies
