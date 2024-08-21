@@ -23,12 +23,14 @@ jobs:
         run: npm install
 
       - name: Run tests with coverage
-        run: npm run test -- --coverage || true
+        id: test
+        run: |
+          npm run test -- --coverage | tee test-output.txt
 
       - name: Check test coverage
         id: coverage
         run: |
-          COVERAGE=$(grep -Po '(?<=All files\s+.*? \K\d+)(?=%)' ./coverage/lcov-report/index.html)
+          COVERAGE=$(grep -Po '(?<=All files\s+).*?(?=\s+)' test-output.txt | awk '{print $4}')
           echo "Test coverage: $COVERAGE%"
           if [ -z "$COVERAGE" ] || [ "$COVERAGE" -lt 50 ]; then
             echo "Test coverage is below 50%. Failing the build."
